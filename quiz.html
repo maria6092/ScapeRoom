@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quiz de Kirby</title><style>
+:root{--bg:#ffe4ef;--ink:#5a1a38;--pink:#e0457b;--ok:#c8f7c5;--ko:#f7c5c5}
+*{box-sizing:border-box}body{font-family:"Trebuchet MS",Verdana,sans-serif;background:var(--bg);color:var(--ink);text-align:center;margin:0;padding:14px;transition:background .3s}
+h3{margin:0 0 6px}.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+button{background:var(--pink);color:#fff;border:0;border-radius:20px;padding:10px 18px;font:inherit;cursor:pointer}
+button:focus-visible,.c:focus-visible,.p:focus-visible{outline:3px solid var(--ink)}
+.sel{outline:4px solid var(--ink)}#m{min-height:26px;font-weight:bold}
+.code{display:inline-block;background:#fff;color:#5a1a38;border:3px dashed var(--pink);border-radius:12px;padding:10px 16px;font-size:20px;letter-spacing:1px;margin-top:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#3a1226;--ink:#ffd9e8;--ok:#1f5a2c;--ko:#6a2323}}
+</style></head><body>
+<h3 id="q"></h3><div class="row" id="o"></div><div id="t" style="display:flex;gap:4px;max-width:420px;margin:12px auto"></div><div id="m"></div>
+<script>
+// CONFIGURA AQUÍ: [pregunta, [opciones], índice correcto]
+const Q=[["¿De qué color es Kirby?",["Rosa","Azul","Verde"],0],
+["¿Cómo se llama el jefe del primer nivel?",["Rey Dedede","Whispy Woods","Meta Knight"],1],
+["¿En qué año salió Kirby's Dream Land?",["1992","2002","1985"],0],
+["¿En qué consola salió el primer juego?",["Game Boy","Super Nintendo","Wii"],0],
+["¿Qué hace Kirby al tragar a un enemigo?",["Copia su habilidad","Se duerme","Se vuelve invisible"],0],
+["¿Quién es el villano más habitual?",["Rey Dedede","Bowser","Ganon"],0]];
+const NEED=4,CODE="KIRBY-ESTRELLA";
+let i=0,ok=0,lock=false;const $=id=>document.getElementById(id);
+function show(){const o=$("o");o.innerHTML="";
+ if(i>=Q.length){if(ok>=NEED){$("q").textContent="¡Dosier completado!";$("m").innerHTML='<div class="code">'+CODE+'</div>'}
+ else{$("q").textContent="Solo "+ok+" aciertos de "+Q.length+" (necesitas "+NEED+").";const b=document.createElement("button");b.textContent="Reintentar";b.onclick=()=>{i=0;ok=0;$("t").innerHTML="";$("m").textContent="";document.body.style.background="";show()};o.appendChild(b)}return}
+ $("q").textContent=(i+1)+"/"+Q.length+" · "+Q[i][0];
+ Q[i][1].forEach((txt,k)=>{const b=document.createElement("button");b.textContent=txt;b.onclick=()=>{if(lock)return;lock=true;
+  const g=k===Q[i][2];if(g)ok++;document.body.style.background=g?"var(--ok)":"var(--ko)";
+  const s=document.createElement("div");s.style.cssText="flex:1;height:22px;border-radius:6px;background:"+(g?"#3cb371":"#e05555");$("t").appendChild(s);
+  $("m").textContent=g?"¡Eso, reina!":"Mi representada Kirby no merece esto";i++;setTimeout(()=>{lock=false;if(i<Q.length)$("m").textContent="";show()},900)};o.appendChild(b)})}
+show();
+</script></body></html>

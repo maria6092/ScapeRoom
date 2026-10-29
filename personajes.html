@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Casting</title><style>
+:root{--bg:#ffe4ef;--ink:#5a1a38;--pink:#e0457b;--ok:#c8f7c5;--ko:#f7c5c5}
+*{box-sizing:border-box}body{font-family:"Trebuchet MS",Verdana,sans-serif;background:var(--bg);color:var(--ink);text-align:center;margin:0;padding:14px;transition:background .3s}
+h3{margin:0 0 6px}.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+button{background:var(--pink);color:#fff;border:0;border-radius:20px;padding:10px 18px;font:inherit;cursor:pointer}
+button:focus-visible,.c:focus-visible,.p:focus-visible{outline:3px solid var(--ink)}
+.sel{outline:4px solid var(--ink)}#m{min-height:26px;font-weight:bold}
+.code{display:inline-block;background:#fff;color:#5a1a38;border:3px dashed var(--pink);border-radius:12px;padding:10px 16px;font-size:20px;letter-spacing:1px;margin-top:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#3a1226;--ink:#ffd9e8;--ok:#1f5a2c;--ko:#6a2323}}
+</style></head><body>
+<h3>Casting de Kirby: la película</h3><div id="m">Escribe el nombre de cada personaje según su foto y su vestuario.</div><div class="row" id="r"></div><button id="b">Comprobar casting</button><div id="o"></div>
+<script>
+// CONFIGURA AQUÍ: img = URL de la foto (si está vacía se usa el emoji); ok = respuestas válidas en minúsculas y sin tildes
+const P=[
+ {img:"",e:"🩷",v:"Cuerpo redondo y rosa, mejillas sonrosadas, pies rojos",ok:["kirby"],c:"KIRBY"},
+ {img:"",e:"🟠",v:"Pequeño y naranja, con un solo ojo azul y sin brazos visibles",ok:["waddle","waddle dee"],c:"WADDLE"},
+ {img:"",e:"🐧",v:"Pingüino con bata roja, gran martillo y corona",ok:["dedede","rey dedede","king dedede"],c:"DEDEDE"},
+ {img:"",e:"🎭",v:"Caballero con máscara plateada y capa azul oscura",ok:["meta knight","metaknight"],c:"META"}];
+const $=id=>document.getElementById(id),norm=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+P.forEach((p,i)=>{const d=document.createElement("div");d.style.cssText="width:150px;background:#fff;color:#5a1a38;border:3px solid var(--pink);border-radius:14px;padding:8px";
+d.innerHTML=(p.img?'<img src="'+p.img+'" alt="Foto del personaje '+(i+1)+'" style="width:100%;border-radius:8px">':'<div style="font-size:48px">'+p.e+'</div>')+
+'<div style="font-size:12px;margin:6px 0">'+p.v+'</div><input id="i'+i+'" aria-label="Nombre del personaje '+(i+1)+'" style="width:100%;padding:6px;border:2px solid var(--pink);border-radius:8px;font:inherit;color:#222">';$("r").appendChild(d)});
+$("b").onclick=()=>{let n=0;P.forEach((p,i)=>{const g=p.ok.includes(norm($("i"+i).value));if(g)n++;$("i"+i).style.background=g?"#c8f7c5":"#f7c5c5"});
+ const all=n===P.length;document.body.style.background=all?"var(--ok)":"var(--ko)";
+ $("m").textContent=all?"¡Casting completo!":n+" de "+P.length+" correctos. Mira bien el vestuario.";
+ if(all){$("o").innerHTML='<div class="code">'+P.map(p=>p.c).join("-")+'</div>';$("b").hidden=true}};
+</script></body></html>

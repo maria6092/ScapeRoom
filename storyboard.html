@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Storyboard</title><style>
+:root{--bg:#ffe4ef;--ink:#5a1a38;--pink:#e0457b;--ok:#c8f7c5;--ko:#f7c5c5}
+*{box-sizing:border-box}body{font-family:"Trebuchet MS",Verdana,sans-serif;background:var(--bg);color:var(--ink);text-align:center;margin:0;padding:14px;transition:background .3s}
+h3{margin:0 0 6px}.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+button{background:var(--pink);color:#fff;border:0;border-radius:20px;padding:10px 18px;font:inherit;cursor:pointer}
+button:focus-visible,.c:focus-visible,.p:focus-visible{outline:3px solid var(--ink)}
+.sel{outline:4px solid var(--ink)}#m{min-height:26px;font-weight:bold}
+.code{display:inline-block;background:#fff;color:#5a1a38;border:3px dashed var(--pink);border-radius:12px;padding:10px 16px;font-size:20px;letter-spacing:1px;margin-top:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#3a1226;--ink:#ffd9e8;--ok:#1f5a2c;--ko:#6a2323}}
+</style></head><body>
+<h3>Ordena el storyboard</h3><div id="m">Toca dos viñetas para intercambiarlas.</div><div class="row" id="r"></div><button id="b">Comprobar</button><div id="o"></div>
+<script>
+// CONFIGURA AQUÍ: viñetas en ORDEN CORRECTO (img opcional: URL de tu dibujo)
+const S=[
+ {e:"☎️",t:"Paquita recibe la llamada: ¡Kirby: la película es suya!",img:""},
+ {e:"🗂️",t:"Magüi descubre que el dosier de diseño ha desaparecido.",img:""},
+ {e:"🔎",t:"Buscan en el despacho y encuentran pistas.",img:""},
+ {e:"🎬",t:"El equipo recompone el dosier a contrarreloj.",img:""},
+ {e:"⭐",t:"Claqueta: ¡se rueda con la estrella warp!",img:""}];
+const CODE="CLAQUETA";
+let order=S.map((_,i)=>i).sort(()=>Math.random()-.5),sel=-1;const $=id=>document.getElementById(id);
+function draw(){const r=$("r");r.innerHTML="";order.forEach((k,i)=>{const d=document.createElement("button");d.className="p"+(i===sel?" sel":"");
+d.style.cssText="width:120px;min-height:150px;background:#fff;color:#5a1a38;border:3px solid var(--pink);border-radius:14px;padding:8px;font-size:13px";
+d.innerHTML=(S[k].img?'<img src="'+S[k].img+'" alt="" style="width:100%;border-radius:8px">':'<div style="font-size:42px">'+S[k].e+'</div>')+'<div>'+S[k].t+'</div>';
+d.onclick=()=>{if(sel<0)sel=i;else{[order[sel],order[i]]=[order[i],order[sel]];sel=-1}draw()};r.appendChild(d)})}
+$("b").onclick=()=>{const g=order.every((k,i)=>k===i);document.body.style.background=g?"var(--ok)":"var(--ko)";
+ $("m").textContent=g?"¡Storyboard en orden! Cuenta cuántas escenas hay.":"Esa secuencia no tiene sentido. Prueba otra vez.";
+ if(g){$("o").innerHTML='<div class="code">'+CODE+'</div>';$("b").hidden=true}};
+draw();
+</script></body></html>

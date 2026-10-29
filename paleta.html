@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paleta de Kirby</title><style>
+:root{--bg:#ffe4ef;--ink:#5a1a38;--pink:#e0457b;--ok:#c8f7c5;--ko:#f7c5c5}
+*{box-sizing:border-box}body{font-family:"Trebuchet MS",Verdana,sans-serif;background:var(--bg);color:var(--ink);text-align:center;margin:0;padding:14px;transition:background .3s}
+h3{margin:0 0 6px}.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+button{background:var(--pink);color:#fff;border:0;border-radius:20px;padding:10px 18px;font:inherit;cursor:pointer}
+button:focus-visible,.c:focus-visible,.p:focus-visible{outline:3px solid var(--ink)}
+.sel{outline:4px solid var(--ink)}#m{min-height:26px;font-weight:bold}
+.code{display:inline-block;background:#fff;color:#5a1a38;border:3px dashed var(--pink);border-radius:12px;padding:10px 16px;font-size:20px;letter-spacing:1px;margin-top:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#3a1226;--ink:#ffd9e8;--ok:#1f5a2c;--ko:#6a2323}}
+</style></head><body>
+<h3>Paleta de Kirby</h3><div id="m"></div><div class="row" id="r"></div><button id="b" hidden>Comprobar orden</button><div id="o"></div>
+<script>
+// CONFIGURA AQUÍ: orden correcto y código final
+const OK=[["Rosa","#ffb7d5"],["Rojo","#e8383d"],["Azul","#6ec6ff"],["Verde","#5cc96b"],["Amarillo","#ffd93b"]];
+const BAD=[["Morado","#8e44ad"],["Negro","#222222"]];
+const CODE="ROSA-ROJO-AZUL-VERDE-AMARILLO";
+let items=[...OK.map(x=>({n:x[0],c:x[1],bad:0})),...BAD.map(x=>({n:x[0],c:x[1],bad:1}))].sort(()=>Math.random()-.5);
+let phase=1,sel=-1;const $=id=>document.getElementById(id);
+function say(s){$("m").textContent=s}
+function draw(){const r=$("r");r.innerHTML="";items.forEach((it,i)=>{const d=document.createElement("button");d.className="c"+(i===sel?" sel":"");d.setAttribute("aria-label",it.n);
+d.style.cssText="width:68px;height:68px;border-radius:14px;border:3px solid #fff;padding:0;background:"+it.c;d.onclick=()=>tap(i);r.appendChild(d)})}
+function tap(i){
+ if(phase===1){ if(items[i].bad){items.splice(i,1);if(items.some(x=>x.bad))say("Intruso descartado. ¡Quedan más!");else{phase=2;say("Ahora ordénalos: toca dos colores para intercambiarlos.");$("b").hidden=false}}
+ else say("Ese color sí es de Kirby. Busca el intruso.");}
+ else{ if(sel<0)sel=i; else{[items[sel],items[i]]=[items[i],items[sel]];sel=-1} }
+ draw()}
+$("b").onclick=()=>{const good=items.every((it,i)=>it.n===OK[i][0]);document.body.style.background=good?"var(--ok)":"var(--ko)";
+ if(good){say("¡Paleta recuperada!");$("o").innerHTML='<div class="code">'+CODE+'</div>';$("b").hidden=true}else say("Ese orden no es el del dosier.")};
+say("Toca los colores que NO pertenecen a la paleta de Kirby.");draw();
+</script></body></html>
